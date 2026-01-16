@@ -13,6 +13,8 @@ public class Game extends JFrame {
 		this.setSize(largura, altura);
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);
+		setUndecorated(true);
+		this.getRootPane().setWindowDecorationStyle(1);
 		
 		this.add(menu);
 		this.setLocationRelativeTo(null);

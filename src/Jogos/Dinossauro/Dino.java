@@ -334,6 +334,7 @@ public class Dino extends JPanel implements ActionListener, KeyListener{
                     janela.setLayout(new BorderLayout());
                     janela.setResizable(false);
                     janela.setUndecorated(true);
+                    janela.getRootPane().setWindowDecorationStyle(1);
                     
                     janela.add(menu);
                     janela.setLocationRelativeTo(null);

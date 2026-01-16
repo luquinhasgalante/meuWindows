@@ -218,6 +218,8 @@ public class Menu extends JPanel implements ActionListener, KeyListener {
             dinoFrame.setSize(largura, altura);
             dinoFrame.setLayout(new BorderLayout());
             dinoFrame.setResizable(false);
+            dinoFrame.setUndecorated(true);
+            dinoFrame.getRootPane().setWindowDecorationStyle(1);
 
             dinoFrame.add(dino);
             dinoFrame.setLocationRelativeTo(null);
