@@ -5,10 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-public class Dinossauro extends Atalho {
-
-    
-    private Game game;
+public final class Dinossauro extends Atalho {
 
     public Dinossauro(int i, int j) {
         super(i, j);
@@ -19,9 +16,14 @@ public class Dinossauro extends Atalho {
         this.setNome("Jogo Dinossauro");
     }
 
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+    }
+
+    public static void abrir() {
+        new Game();
     }
 
     @Override

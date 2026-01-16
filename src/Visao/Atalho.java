@@ -9,26 +9,41 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public abstract class Atalho extends JPanel implements MouseListener {
     
     private final int ALTURA = 85;
     private final int LARGURA = 80;
-    Point offset = null;
-
+    private Point offset = null;
     private Image imagem;
+    private MouseAdapter mouseAdapter;
     private int LARGURA_IMAGEM;
     private int ALTURA_IMAGEM;
     private int i;
     private int j;
+    private int posicaoInicialX;
+    private int posicaoInicialY;
     private boolean active;
     private boolean hasComponent;
     private boolean mouseIn;
     private boolean run;
     private static Atalho ativo;
+    private static Atalho agarrado;
+    private JPopupMenu menu;
     private String nome;
 
+
+    public Atalho(){}
 
     public Atalho(int i, int j) {
         initComponents(i, j);
@@ -36,10 +51,12 @@ public abstract class Atalho extends JPanel implements MouseListener {
     }
 
     private void initComponents(int i, int j) {
-        this.i = (i * ALTURA);
-        this.j = (j * LARGURA);
+        this.i = i;
+        this.j = j;
+        this.posicaoInicialX = (j * LARGURA);
+        this.posicaoInicialY = (i * ALTURA);
 
-        this.setBounds(this.j, this.i, LARGURA, ALTURA);
+        this.setBounds(this.posicaoInicialX, this.posicaoInicialY, LARGURA, ALTURA);
         this.LARGURA_IMAGEM = 33;
         this.ALTURA_IMAGEM = 53;
         this.active = false;
@@ -48,12 +65,27 @@ public abstract class Atalho extends JPanel implements MouseListener {
         this.run = false;
         this.nome = "";
         Atalho.ativo = null;
+        
 
-    }
+        this.mouseAdapter = new MouseAdapter() {
+            
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if(offset != null) {
+                    if(Atalho.this.isHasComponent()) {
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
+                        Atalho.setAgarrado(Atalho.this);
+                        
+                        int x = getX() + e.getX() - offset.x;
+                        int y = getY() + e.getY() - offset.y;
+                        setLocation(x, y);
+                        setActive(false);
+                    }
+                }
+            }
+        };
+
+        
         this.addMouseListener(this);
         this.addMouseMotionListener(mouseAdapter);
     }
@@ -98,6 +130,16 @@ public abstract class Atalho extends JPanel implements MouseListener {
         }
     }
 
+    public void abrirMenu(MouseEvent e) {
+
+        menu = new JPopupMenu();
+        JMenuItem renomear = new JMenuItem("Renomear");
+        renomear.addActionListener(e1 -> new Renomear(this));
+
+        menu.add(renomear);
+    }
+
+
     private void pressionado() {
 
         if(this.isActive()) {
@@ -118,7 +160,7 @@ public abstract class Atalho extends JPanel implements MouseListener {
             repaint();
         }
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         
@@ -129,16 +171,87 @@ public abstract class Atalho extends JPanel implements MouseListener {
         if(e.getButton() == MouseEvent.BUTTON1) {
             pressionado();
             offset = e.getPoint();
+
+            if(getParent() instanceof TelaPrincipal tela) {
+                tela.setLayer(this, TelaPrincipal.getGRAB_LAYER());
+            }
         }
+
+        if(e.getButton() == MouseEvent.BUTTON3) {
+            
+            this.setRun(false);
+        
+            if(!this.hasComponent) {
+
+                JPopupMenu menu = new JPopupMenu();
+                JMenu mudarFundo = new JMenu("Mudar Plano de fundo");
+                JMenuItem corSolida = new JMenuItem("Selecionar cor Sólida");
+                JMenuItem escolhaImagem = new JMenuItem("Selecionar Imagem");
+                escolhaImagem.addActionListener(e1 -> salvarImagem());
+                corSolida.addActionListener(e1 -> selecionarCor());
+                
+                mudarFundo.add(corSolida);
+                mudarFundo.add(escolhaImagem);
+                menu.add(mudarFundo);
+                
+                int x = e.getX();
+                int y = e.getY();
+                
+                menu.show(this , x, y);
+            }
+            else {
+                abrirMenu(e);
+                menu.show(this , e.getX(), e.getY());
+            }
+        }
+    }
+
+    private void selecionarCor() {
+        Color cor = JColorChooser.showDialog(null, "Escolha a cor de fundo", Color.BLACK);
+        if(getParent() instanceof TelaPrincipal tela) {
+            tela.selecionarCor(cor);
+        }
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if(Atalho.getAgarrado() != null) {
+
+            Atalho.getAgarrado().setBounds(
+                agarrado.getPosicaoInicialX(),
+                agarrado.getPosicaoInicialY(),
+                agarrado.getLARGURA(),
+                agarrado.getALTURA()
+            );
+            
+            Atalho.setAgarrado(null);
+        }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         this.setMouseIn(true);
+
+        if(getParent() instanceof TelaPrincipal tela) {
+
+            if(Atalho.getAgarrado() != null && this != Atalho.getAgarrado()) {
+                int finalX = agarrado.getPosicaoInicialX();
+                int finalY = agarrado.getPosicaoInicialY();
+                int finalI = agarrado.getI();
+                int finalJ = agarrado.getJ();
+                agarrado.setPosicaoInicialX(this.getPosicaoInicialX());
+                agarrado.setPosicaoInicialY(this.getPosicaoInicialY());
+                agarrado.setI(this.getI());
+                agarrado.setJ(this.getJ());
+                this.setPosicaoInicialX(finalX);
+                this.setPosicaoInicialY(finalY);
+                this.setI(finalI);
+                this.setJ(finalJ);
+                this.setBounds( getPosicaoInicialX(), getPosicaoInicialY(), getLARGURA(), getALTURA());
+            }
+        }
+        revalidate();
         repaint();
     }
 
@@ -148,20 +261,29 @@ public abstract class Atalho extends JPanel implements MouseListener {
         repaint();
     }
 
+    public void salvarImagem() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Selecione sua imagem");
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setCurrentDirectory(new File("."));
 
-    MouseAdapter mouseAdapter = new MouseAdapter() {
-        
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if(offset != null) {
-                int x = getX() + e.getX() - offset.x;
-                int y = getY() + e.getY() - offset.y;
-                setLocation(x, y);
-                setActive(false);
+        FileNameExtensionFilter filtro =
+        new FileNameExtensionFilter("Apenas imagens", "jpg", "jpeg", "png");
+        chooser.setFileFilter(filtro);
+
+        int resultado = chooser.showOpenDialog(null);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File arquivo = chooser.getSelectedFile();
+            Image imagemFundo = new ImageIcon(arquivo.getAbsolutePath()).getImage();
+            if(getParent() instanceof TelaPrincipal tela) {
+                tela.setPlanoFundo(imagemFundo);
+                tela.setCorSolida(false);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Bolhas! Operação cancelada.");
         }
-    };
-
+    }
 
     public boolean isActive() {
         return this.active;
@@ -226,5 +348,87 @@ public abstract class Atalho extends JPanel implements MouseListener {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public int getALTURA() {
+        return ALTURA;
+    }
+
+    public int getLARGURA() {
+        return LARGURA;
+    }
+
+    public Point getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Point offset) {
+        this.offset = offset;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
+    }
+
+    public int getPosicaoInicialX() {
+        return posicaoInicialX;
+    }
+
+    public void setPosicaoInicialX(int posicaoInicialX) {
+        this.posicaoInicialX = posicaoInicialX;
+    }
+
+    public int getPosicaoInicialY() {
+        return posicaoInicialY;
+    }
+
+    public void setPosicaoInicialY(int posicaoInicialY) {
+        this.posicaoInicialY = posicaoInicialY;
+    }
+
+    public static Atalho getAtivo() {
+        return ativo;
+    }
+
+    public static void setAtivo(Atalho ativo) {
+        Atalho.ativo = ativo;
+    }
+
+    public static Atalho getAgarrado() {
+        return agarrado;
+    }
+
+    public static void setAgarrado(Atalho agarrado) {
+        Atalho.agarrado = agarrado;
+    }
+
+    public MouseAdapter getMouseAdapter() {
+        return mouseAdapter;
+    }
+
+    public void setMouseAdapter(MouseAdapter mouseAdapter) {
+        this.mouseAdapter = mouseAdapter;
+    }
+
+    public JPopupMenu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(JPopupMenu menu) {
+        this.menu = menu;
+    }
+
+    
 
 }

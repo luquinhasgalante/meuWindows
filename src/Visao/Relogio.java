@@ -13,18 +13,17 @@ import javax.swing.Timer;
 
 public class Relogio extends JPanel implements ActionListener {
 
-    private Dimension d;
-    private int LARGURA = 200;
+    private int LARGURA = 150;
     private Timer timer;
     private String horario = "";
 
-    public Relogio() {
-        initComponents();
+    public Relogio(GerenciadorDeTarefas g) {
+        initComponents(g);
     }
 
-    public void initComponents() {
+    public void initComponents(GerenciadorDeTarefas g) {
         
-        this.setBounds(1280 - 150, 0, 150, 65);
+        this.setBounds(g.getLARGURA() - LARGURA, 0, LARGURA, g.getALTURA());
         this.setOpaque(false);
         timer = new Timer(1000, this);
         timer.start();
@@ -33,10 +32,12 @@ public class Relogio extends JPanel implements ActionListener {
     private void desenharHorario(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
         g2d.setColor(new Color(255, 255, 255, 64));
         g2d.fillRect(0, 0, getWidth(), getHeight());
+
         g.setColor(Color.black);
-        g.drawString("Horario: " + atualizarHorario(),24, 65 - 25);
+        g.drawString("Horario: " + atualizarHorario(),24, getParent().getHeight() - 15);
     }
 
     public String atualizarHorario() {
@@ -58,4 +59,3 @@ public class Relogio extends JPanel implements ActionListener {
     }
 
 }
-
