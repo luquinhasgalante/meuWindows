@@ -1,6 +1,8 @@
 package Visao;
 
+import Sons.Som;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -25,6 +27,7 @@ public abstract class Atalho extends JPanel implements MouseListener {
     private final int ALTURA = 85;
     private final int LARGURA = 80;
     private Point offset = null;
+    private Pasta pasta = null;
     private Image imagem;
     private MouseAdapter mouseAdapter;
     private int LARGURA_IMAGEM;
@@ -39,6 +42,7 @@ public abstract class Atalho extends JPanel implements MouseListener {
     private boolean run;
     private static Atalho ativo;
     private static Atalho agarrado;
+    private static TelaPrincipal tela;
     private JPopupMenu menu;
     private String nome;
 
@@ -131,12 +135,33 @@ public abstract class Atalho extends JPanel implements MouseListener {
     }
 
     public void abrirMenu(MouseEvent e) {
+        Som.padrao(Som.getClick());
 
         menu = new JPopupMenu();
         JMenuItem renomear = new JMenuItem("Renomear");
         renomear.addActionListener(e1 -> new Renomear(this));
 
+        if(!(getParent() instanceof TelaPrincipal)) {
+            JMenuItem adicionar = new JMenuItem("Adicionar a tela principal");
+            System.out.println(tela);
+            adicionar.addActionListener(e1 -> irTelaPrincipal());
+            menu.add(adicionar);
+            menu.setPreferredSize(new Dimension(160, 70));
+        }
+
         menu.add(renomear);
+    }
+
+    private void recalcularBounds(int i, int j) {
+        
+        posicaoInicialX = (j * LARGURA);
+        posicaoInicialY = (i * ALTURA);
+        System.out.println("Posição inicialX = " + posicaoInicialX);
+        System.out.println("Posição inicialY = " + posicaoInicialY);
+
+        this.setBounds(posicaoInicialX, posicaoInicialY, LARGURA, ALTURA);
+        revalidate();
+        repaint();
     }
 
 
@@ -160,6 +185,30 @@ public abstract class Atalho extends JPanel implements MouseListener {
             repaint();
         }
     }
+
+    public void irTelaPrincipal() {
+        int contadorI = 0;
+        int contadorJ = 0;
+        boolean encontrado = false;
+
+        for(Atalho[] list : tela.getArray()) {
+            for(Atalho a : list) {
+                if(!a.hasComponent) {
+                    Pasta p = this.getPasta();
+                    p.getAtalhos().remove(this);
+                    if(p.getContadorJ() > 0) p.setContadorJ(p.getContadorJ() - 1);
+                    else p.setContadorI(p.getContadorI() - 1);
+                    recalcularBounds(contadorI, contadorJ);
+                    encontrado = true;
+                    break;
+                }
+                contadorJ++;
+            }
+            if(encontrado) break;
+            contadorI++;
+        }
+        tela.adicionarAtalho(this);
+    }
     
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -182,7 +231,7 @@ public abstract class Atalho extends JPanel implements MouseListener {
             this.setRun(false);
         
             if(!this.hasComponent) {
-
+                Som.padrao(Som.getClick());
                 JPopupMenu menu = new JPopupMenu();
                 JMenu mudarFundo = new JMenu("Mudar Plano de fundo");
                 JMenuItem corSolida = new JMenuItem("Selecionar cor Sólida");
@@ -427,6 +476,22 @@ public abstract class Atalho extends JPanel implements MouseListener {
 
     public void setMenu(JPopupMenu menu) {
         this.menu = menu;
+    }
+
+    public static TelaPrincipal getTela() {
+        return tela;
+    }
+
+    public static void setTela(TelaPrincipal tela) {
+        Atalho.tela = tela;
+    }
+
+    public Pasta getPasta() {
+        return pasta;
+    }
+
+    public void setPasta(Pasta pasta) {
+        this.pasta = pasta;
     }
 
     

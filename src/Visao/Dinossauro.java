@@ -14,8 +14,22 @@ public final class Dinossauro extends Atalho {
         this.setOpaque(false);
         this.setHasComponent(true);
         this.setNome("Jogo Dinossauro");
+        if(getParent() instanceof TelaPrincipal tela) {
+            System.out.println("Pipippoop");
+            tela.adicionarAtalho(this);
+        }
     }
 
+    
+    @Override
+    public void abrirMenu(MouseEvent e) {
+        super.abrirMenu(e);
+
+        JMenuItem abrir = new JMenuItem("Abrir");
+        abrir.addActionListener(e1 -> abrir());
+        this.getMenu().add(abrir);
+        this.getMenu().show(this, e.getX(), e.getY());
+    }
 
     @Override
     public void paintComponent(Graphics g) {

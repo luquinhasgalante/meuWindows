@@ -1,6 +1,8 @@
 package Visao;
 
-import java.awt.Dimension;
+import Sons.Som;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,10 +23,10 @@ public class Explorar extends JFrame {
         this.setLocationRelativeTo(null);
         this.setUndecorated(true);
         this.getRootPane().setWindowDecorationStyle(1);
+        this.setLayout(new BorderLayout());
         
         painel = new JPanel();
-        painel.setPreferredSize(new Dimension(640, 400));
-        painel.setLayout(null);
+        painel.setLayout(new FlowLayout());
         
         scroll = new JScrollPane(painel);
         scroll.setBounds(0, 0, 630, 260);
@@ -32,13 +34,12 @@ public class Explorar extends JFrame {
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         label = new JLabel("Ainda não há arquivos nesta pasta.");
+        label.setSize(198, 30);
         label.setBounds((getWidth() / 2) - (198 / 2), 15, 198, 30);
         painel.add(label);
         
-        this.setLayout(null);
-        this.add(scroll);
-        
-        
+        this.add(scroll, BorderLayout.CENTER);
+        Som.padrao(Som.getClick());
         exibirAtalhos();
         this.setVisible(true);
     }
@@ -47,9 +48,11 @@ public class Explorar extends JFrame {
     public void exibirAtalhos() {
         if(!pasta.getAtalhos().isEmpty()) {
             painel.remove(label);
+            painel.setLayout(null);
             for(Atalho a : pasta.getAtalhos()) {
                 a.setRun(false);
                 a.setActive(false);
+                a.removeMouseMotionListener(a.getMouseAdapter()); 
                 painel.add(a);
             }
         }

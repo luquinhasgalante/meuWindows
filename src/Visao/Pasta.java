@@ -1,5 +1,6 @@
 package Visao;
 
+import Sons.Som;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -34,8 +35,11 @@ public final class Pasta extends Atalho {
 
         JMenuItem adicionarItem = new JMenuItem("Adicionar à pasta");
         adicionarItem.addActionListener(e1 -> adicionarArquivo());
+        JMenuItem abrir = new JMenuItem("Abrir");
+        abrir.addActionListener(e1 -> abrir());
         this.getMenu().setPreferredSize(new Dimension(120, 50));
         this.getMenu().add(adicionarItem);
+        this.getMenu().add(abrir);
 
         this.getMenu().show(this, e.getX(), e.getY());
     }
@@ -53,9 +57,14 @@ public final class Pasta extends Atalho {
             System.out.println(extensao);
 
 
-            if(extensao.equals("txt")) {
+            if(
+                extensao.equals("txt")|| 
+                extensao.equals("java")|| 
+                extensao.equals("me")
+            ) {
                 BlocoDeNotas notas = new BlocoDeNotas(contadorI, contadorJ, arquivo);
                 notas.setNome(arquivo.getName());
+                notas.setPasta(this);
                 this.atalhos.add(notas);
                 contadorJ++;
 
@@ -64,9 +73,13 @@ public final class Pasta extends Atalho {
                     this.contadorJ = 0;
                 }
             }
-            else if(extensao.equals("png") || extensao.equals("jpeg") || extensao.equals("jpg")) {
+            else if(
+                extensao.equals("png") || 
+                extensao.equals("jpeg") || 
+                extensao.equals("jpg")) {
                 Image imagem = new ImageIcon(arquivo.getAbsolutePath()).getImage();
                 Imagem atalho = new Imagem(contadorI, contadorJ, this);
+                atalho.setPasta(this);
                 atalho.setImagem(imagem);
                 atalho.setNome(arquivo.getName());
 
@@ -79,6 +92,7 @@ public final class Pasta extends Atalho {
                 }
             }
             else {
+                Som.padrao(Som.getErro());
                 JOptionPane.showMessageDialog(null, "Bolhuras... Não suportamos esse formato");
             }
 
@@ -90,8 +104,13 @@ public final class Pasta extends Atalho {
             }
             
         } else {
+            Som.padrao(Som.getErro());
             JOptionPane.showMessageDialog(null, "Bolhas! Operação cancelada.");
         }
+    }
+
+    public void abrir() {
+        this.explorar = new Explorar(this);
     }
 
 

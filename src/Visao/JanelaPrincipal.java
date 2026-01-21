@@ -2,7 +2,6 @@ package Visao;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 public class JanelaPrincipal extends JFrame {
@@ -28,12 +27,4 @@ public class JanelaPrincipal extends JFrame {
         pack();
     }
 
-    public static void main(String[] args) {
-        
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JanelaPrincipal().setVisible(true);
-            }
-        });   
-    }
 }

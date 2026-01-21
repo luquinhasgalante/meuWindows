@@ -4,6 +4,7 @@ import Aplicativos.Notas;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 
 public final class BlocoDeNotas extends Atalho {
     
@@ -22,6 +23,32 @@ public final class BlocoDeNotas extends Atalho {
         this.setNome("Bloco de notas");
     }
 
+    public BlocoDeNotas(int i, int j, File arquivo, Pasta pasta) {
+        super(i, j);
+        
+        this.arquivo = arquivo;
+        
+        this.setImagem(new ImageIcon(getClass().getResource("/Imagens/notas.png")).getImage());
+        this.setOpaque(false);
+        this.setHasComponent(true);
+        this.setNome("Bloco de notas");
+
+    }    
+    
+    @Override
+    public void abrirMenu(MouseEvent e) {
+        super.abrirMenu(e);
+
+        JMenuItem abrir = new JMenuItem("Abrir");
+        abrir.addActionListener(e1 -> abrir());
+        this.getMenu().add(abrir);
+        this.getMenu().show(this, e.getX(), e.getY());
+    }
+
+
+    public void abrir() {
+        new Notas(arquivo);
+    }
     
     @Override
     public void mousePressed(MouseEvent e) {

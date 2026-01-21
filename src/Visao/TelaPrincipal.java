@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 
 public class TelaPrincipal extends JLayeredPane {
     
@@ -23,11 +22,11 @@ public class TelaPrincipal extends JLayeredPane {
 
 
     private Dimension d;
-    private JPanel[][] array = new JPanel[LINHAS][COLUNAS];
-    private Pasta pastaPrincipal = new Pasta(ALLBITS, ABORT);
+    private Atalho[][] array = new Atalho[LINHAS][COLUNAS];
 
     public TelaPrincipal(Dimension d) {
         
+        Atalho.setTela(this);
         this.d = d;
         this.setPreferredSize(d);
         this.setSize(d);
@@ -53,6 +52,26 @@ public class TelaPrincipal extends JLayeredPane {
         array[0][0] = new Dinossauro(0, 0);
         array[0][1] = new BlocoDeNotas(0, 1, null);
         array[0][2] = new Pasta(0, 2);
+    }
+
+    public void adicionarAtalho(Atalho a) {
+        boolean encontrado = false;
+        for(int i = 0; i < LINHAS; i++) {
+            for(int j = 0; j < COLUNAS; j++) {
+                if(!array[i][j].isHasComponent()) {
+                    this.remove(array[i][j]);
+                    System.out.println(i +" "+ j);
+                    array[i][j] = a;
+                    a.addMouseMotionListener(a.getMouseAdapter());
+                    this.add(array[i][j], GRID_LAYER);
+                    revalidate();
+                    repaint();
+                    encontrado = true;
+                    break;
+                }
+            }
+            if(encontrado) break;
+        }
     }
 
     @Override
@@ -117,11 +136,11 @@ public class TelaPrincipal extends JLayeredPane {
         this.d = d;
     }
 
-    public JPanel[][] getArray() {
+    public Atalho[][] getArray() {
         return array;
     }
 
-    public void setArray(JPanel[][] array) {
+    public void setArray(Atalho[][] array) {
         this.array = array;
     }
 
