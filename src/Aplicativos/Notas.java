@@ -1,5 +1,7 @@
 package Aplicativos;
 
+import Sons.Som;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
@@ -41,13 +44,14 @@ public class Notas extends JFrame implements ActionListener {
     private JMenuItem abrirItem;
     private JMenuItem salvarItem;
     private JMenuItem sairItem;
+    private JPanel container;
     private File arquivo;
 
     public Notas(File arquivo) {
         this.setTitle("Bloco de notas");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setSize(400, 550);
-        this.setLayout(new FlowLayout());
+        this.setSize(600, 340);
+        this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(null);
 		this.setUndecorated(true);
 		this.getRootPane().setWindowDecorationStyle(1);
@@ -61,8 +65,11 @@ public class Notas extends JFrame implements ActionListener {
 
 
         this.scroll = new JScrollPane(textArea);
-        scroll.setPreferredSize(new Dimension(380, 480));
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        container = new JPanel();
+        container.setPreferredSize(new Dimension(getWidth(), 30));
+        container.setLayout(new FlowLayout());
 
         fontLabel = new JLabel("Fonte: ");
 
@@ -107,12 +114,12 @@ public class Notas extends JFrame implements ActionListener {
         menuBar.add(arquivoMenu);
 
         this.setJMenuBar(menuBar);
-        this.add(fontLabel);
-        this.add(spinner);
-        this.add(mudarCor);
-        this.add(fontesBox);
-        this.add(scroll);
-
+        container.add(fontLabel);
+        container.add(spinner);
+        container.add(mudarCor);
+        container.add(fontesBox);
+        this.add(container, BorderLayout.NORTH);
+        this.add(scroll, BorderLayout.CENTER);
         abrirArquivo();
         
         this.setVisible(true);
@@ -120,6 +127,7 @@ public class Notas extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Som.padrao(Som.getClick());
 
         if(e.getSource() == mudarCor) {
             Color cor = JColorChooser.showDialog(null, "Escolha a cor para seu texto!", Color.BLACK);
@@ -138,7 +146,7 @@ public class Notas extends JFrame implements ActionListener {
             chooser.setCurrentDirectory(new File("."));
 
             FileNameExtensionFilter filter =
-            new FileNameExtensionFilter("Arquivo de texto", "txt");
+            new FileNameExtensionFilter("Arquivo de texto", "txt", "me", "java");
             
             chooser.setFileFilter(filter);
 

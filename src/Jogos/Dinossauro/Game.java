@@ -1,5 +1,6 @@
 package Jogos.Dinossauro;
 
+import Sons.Som;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
@@ -18,6 +19,7 @@ public class Game extends JFrame {
 		
 		this.add(menu);
 		this.setLocationRelativeTo(null);
+        Som.padrao(Som.getClick());
 		
 		
 		menu.requestFocus();
