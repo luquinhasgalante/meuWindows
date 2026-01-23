@@ -29,7 +29,7 @@ public class TelaPrincipal extends JLayeredPane {
         this.setSize(d);
         this.setLayout(null);
         organizarTela();
-        planoFundo = new ImageIcon(getClass().getResource("/Imagens/planodefundo.png")).getImage();
+        planoFundo = new ImageIcon(getClass().getResource("/Imagens/bubble os.png")).getImage();
     }
 
     public void organizarTela() {
@@ -49,6 +49,7 @@ public class TelaPrincipal extends JLayeredPane {
         array[0][0] = new Dinossauro(0, 0);
         array[0][1] = new BlocoDeNotas(0, 1, null);
         array[0][2] = new Pasta(0, 2);
+        array[0][3] = new Snake(0, 3);
     }
 
     public void adicionarAtalho(Atalho a) {
