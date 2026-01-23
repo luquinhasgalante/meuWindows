@@ -36,7 +36,7 @@ public class Relogio extends JPanel implements ActionListener {
         g2d.setColor(new Color(255, 255, 255, 64));
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        g.setColor(Color.RED);
+        g.setColor(Color.BLACK);
         g.drawString("Horario: " + atualizarHorario(),24, getParent().getHeight() - 15);
     }
 
@@ -59,6 +59,7 @@ public class Relogio extends JPanel implements ActionListener {
     }
 
 }
+
 
 
 
