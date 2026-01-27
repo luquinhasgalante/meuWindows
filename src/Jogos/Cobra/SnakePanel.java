@@ -36,7 +36,7 @@ public class SnakePanel extends JPanel implements ActionListener {
     public SnakePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(LARGURA, ALTURA));
-        this.setBackground(Color.gray);
+        this.setBackground(Color.WHITE);
         this.setFocusable(true);
         this.addKeyListener(new Tecla());
         startGame();
@@ -67,6 +67,13 @@ public class SnakePanel extends JPanel implements ActionListener {
     public void draw(Graphics g) {
         Image img = new ImageIcon(getClass().getResource("/Jogos/Dinossauro/img/background_preview_2.png")).getImage();
         g.drawImage(img, 0, 0, LARGURA, ALTURA, null);
+        g.setColor(Color.gray);
+        for(int i = 0; i < ALTURA; i++){
+            g.drawLine(i * TAMANHO_PIXEL, 0, i * TAMANHO_PIXEL, ALTURA);
+        }
+        for(int i = 0; i < LARGURA; i++){
+            g.drawLine(0, i * TAMANHO_PIXEL, LARGURA, i * TAMANHO_PIXEL);
+        }
         g.setColor(Color.GREEN);
         g.fillOval(comidaX, comidaY, TAMANHO_PIXEL, TAMANHO_PIXEL);
         
@@ -80,7 +87,7 @@ public class SnakePanel extends JPanel implements ActionListener {
             g.fillRect(x[i], y[i], TAMANHO_PIXEL, TAMANHO_PIXEL);
         }
         if(!rodando) gameOver(g);
-        g.setColor(Color.WHITE);
+        g.setColor(Color.white);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         FontMetrics fm = getFontMetrics(g.getFont());
         String score = "Score: " + comidas;

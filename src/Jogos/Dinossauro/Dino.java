@@ -343,6 +343,9 @@ public class Dino extends JPanel implements ActionListener, KeyListener{
                     menu.requestFocus();
                     janela.pack();
                     janela.setVisible(true);
+                    this.loopTimer.stop();
+                    this.obsTimer.stop();
+                    this.velTimer.stop();
                     this.frame.dispose();
                 }
             }

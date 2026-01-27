@@ -1,12 +1,10 @@
 package Aplicativos;
 
-import javax.swing.JFrame;
-
 import Visao.Imagem;
-
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MostraImagem extends JPanel {
@@ -20,6 +18,7 @@ public class MostraImagem extends JPanel {
         this.frame = new JFrame();
         frame.setUndecorated(true);
         frame.getRootPane().setWindowDecorationStyle(1);
+        frame.setIconImage(imagem.getImagem() );
         frame.setTitle(imagem.getNome());
         frame.setSize(600, 340);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

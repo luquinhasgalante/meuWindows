@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -131,6 +133,12 @@ public class Menu extends JPanel implements ActionListener, KeyListener {
         personagens.add(blocoDino);
 
         personagemEscolhido = personagens.get(contadorX);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                loopTimer.stop();
+            }
+        });
         
     }
 
@@ -227,6 +235,14 @@ public class Menu extends JPanel implements ActionListener, KeyListener {
             dino.requestFocus();
             dinoFrame.pack();
             dinoFrame.setVisible(true);
+            dinoFrame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loopTimer.stop();
+                    System.out.println("sout para debug sai daqui");
+                }
+            });
+            this.loopTimer.stop();
             this.frame.dispose();
         }
     }

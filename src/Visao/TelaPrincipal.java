@@ -25,7 +25,7 @@ public class TelaPrincipal extends JLayeredPane {
         
         Atalho.setTela(this);
         this.d = d;
-        this.setPreferredSize(d);
+        this.setPreferredSize(new Dimension((int) d.getWidth(), (int) d.getHeight()));
         this.setSize(d);
         this.setLayout(null);
         organizarTela();
@@ -50,6 +50,7 @@ public class TelaPrincipal extends JLayeredPane {
         array[0][1] = new BlocoDeNotas(0, 1, null);
         array[0][2] = new Pasta(0, 2);
         array[0][3] = new Snake(0, 3);
+        array[0][4] = new Browser(0, 4, null);
     }
 
     public void adicionarAtalho(Atalho a) {

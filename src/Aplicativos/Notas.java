@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -55,6 +57,7 @@ public class Notas extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
 		this.setUndecorated(true);
 		this.getRootPane().setWindowDecorationStyle(1);
+        this.setIconImage(new ImageIcon(getClass().getResource("/Imagens/notas.png")).getImage());
 
         this.arquivo = arquivo;
         
