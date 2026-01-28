@@ -14,7 +14,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 public class Navegador extends JFrame {
-    String url;
+    private String url;
 
     public Navegador(String url) {
         
@@ -45,5 +45,14 @@ public class Navegador extends JFrame {
             jfxPanel.setScene(new Scene(webView));
         });
     }
+
+    public String getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
     
 }
+
