@@ -20,7 +20,7 @@ import javax.swing.JPopupMenu;
 public class Iniciar extends JPanel {
 
     private int LARGURA = 100;
-    private final String LINK_SITE = "https://lucasmilhao.page.gd";
+    private final String LINK_SITE = "https://www.instagram.com/luck4s.villa/";
     private boolean mouseIn = false;
     private final JPopupMenu menu;
 
@@ -106,3 +106,4 @@ public class Iniciar extends JPanel {
         }
     }
 }
+
